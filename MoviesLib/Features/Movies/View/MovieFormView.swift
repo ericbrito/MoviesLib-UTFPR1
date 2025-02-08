@@ -10,9 +10,9 @@ import SwiftData
 import SwiftUI
 
 struct MovieFormView: View {
-    @State var movie: Movie
     @State private var selectedPoster: PhotosPickerItem?
     @State private var posterData: Data?
+    @Bindable var movie: Movie
     @Binding var path: NavigationPath
     @Environment(\.modelContext) var modelContext
     let buttonTitle: String

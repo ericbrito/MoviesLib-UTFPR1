@@ -15,11 +15,13 @@ enum NavigationScreen: Hashable {
 struct MoviesView: View {
 
     @State private var path = NavigationPath()
+    @State private var searchString: String = ""
 
     var body: some View {
         NavigationStack(path: $path) {
-            MovieListingView()
+            MovieListingView(searchString: searchString)
                 .navigationTitle("Filmes")
+                .searchable(text: $searchString, prompt: "Entre com o nome do filme")
                 .navigationDestination(for: NavigationScreen.self) { destination in
                     switch destination {
                     case .detail(let movie):
