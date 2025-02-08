@@ -8,16 +8,17 @@
 import SwiftUI
 
 struct MovieDetailView: View {
+    let movie: Movie
+
     var body: some View {
         VStack(spacing: 10) {
             poster
-
             VStack(alignment: .leading) {
                 title
                 rating
                 categories
                 playButton
-                MovieSummaryView()
+                MovieSummaryView(summary: movie.summary)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
@@ -25,20 +26,36 @@ struct MovieDetailView: View {
             Spacer()
         }
         .ignoresSafeArea(edges: .top)
+        .toolbar {
+            NavigationLink(value: NavigationScreen.form(movie)) {
+                Text("Editar")
+            }
+        }
     }
 
     // MARK: - Poster
+    @ViewBuilder
     var poster: some View {
-        Image("avengers")
-            .resizable()
-            .scaledToFill()
-            .frame(height: 400)
-            .clipped()
+        if let image = movie.image,
+           let uiimage = UIImage(data: image) {
+            Image(uiImage: uiimage)
+                .resizable()
+                .scaledToFill()
+                .frame(height: 400)
+                .clipped()
+        } else {
+            Image(systemName: "movieclapper")
+                .resizable()
+                .scaledToFit()
+                .foregroundStyle(Color.gray.opacity(0.3))
+                .padding(40)
+                .frame(height: 400)
+        }
     }
 
     // MARK: - Title
     var title: some View {
-        Text("Avengers")
+        Text(movie.title)
             .font(.title)
             .fontWeight(.bold)
             .fontDesign(.rounded)
@@ -50,7 +67,7 @@ struct MovieDetailView: View {
         HStack {
             Image(systemName: "star.fill")
                 .foregroundStyle(.yellow)
-            Text("10.0")
+            Text(movie.rating.description)
 
             Spacer()
 
@@ -70,7 +87,7 @@ struct MovieDetailView: View {
 
     // MARK: - Categories
     var categories: some View {
-        Text("Sci-Fi, Ação")
+        Text(movie.categories)
     }
 
     // MARK: - Play Button
@@ -100,5 +117,19 @@ struct MovieDetailView: View {
 }
 
 #Preview {
-    MovieDetailView()
+    MovieDetailView(movie: Movie(title: "Matrix",
+                                 categories: "Ação",
+                                 duration: "02:30",
+                                 rating: 10.0,
+                                 summary: "Show de bola",
+                                 image: nil))
+}
+
+#Preview {
+    MovieDetailView(movie: Movie(title: "Avengers",
+                                 categories: "Ação",
+                                 duration: "02:30",
+                                 rating: 10.0,
+                                 summary: "Vingadores vingando geral",
+                                 image: nil))
 }
